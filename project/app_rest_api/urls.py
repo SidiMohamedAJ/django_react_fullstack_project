@@ -3,7 +3,7 @@ from .views import (
     CategorieListAPIView, CourseListAPIView,
     InstructorListAPIView, OrganizationListAPIView,
     SubcategorieListAPIView, CourseorganizationListAPIView,
-    CourseinstructorListAPIView, InstructororganizationListAPIView, SearchAPIView, Details
+    CourseinstructorListAPIView, InstructororganizationListAPIView, SearchAPIView, Details_Categories
 )
 
 urlpatterns = [
@@ -16,6 +16,6 @@ urlpatterns = [
     path('courseinstructors/', CourseinstructorListAPIView.as_view(), name='courseinstructor-list'),
     path('instructororganizations/', InstructororganizationListAPIView.as_view(), name='instructororganization-list'),
     path('search/', SearchAPIView.as_view(), name='search'),
-    path('details/<str:category_id>/', Details.as_view(), name='details'),
+    path('details_categorie/<str:category_id>/', Details_Categories.as_view(), name='details'),
     
 ]

@@ -37,9 +37,33 @@ class OrganizationListAPIView(APIView):
 
 class SubcategorieListAPIView(APIView):
     def get(self, request):
-        subcategories = Subcategorie.objects.all()
-        serializer = SubcategorieSerializer(subcategories, many=True)
-        return Response(serializer.data)
+        # Récupérer toutes les catégories
+        categories = Categorie.objects.all()
+        categorie_serializer = CategorieSerializer(categories, many=True)
+        categorie_data = categorie_serializer.data
+
+        # Créer une liste pour stocker les éléments de menu
+        menuItems = []
+
+        # Parcourir chaque catégorie
+        for categorie in categorie_data:
+            # Récupérer les sous-catégories de cette catégorie
+            subcategories = Subcategorie.objects.filter(categorie=categorie['id'])
+            subcategorie_serializer = SubcategorieSerializer(subcategories, many=True)
+            subcategorie_data = subcategorie_serializer.data
+
+            # Créer un élément de menu pour cette catégorie
+            menuItem = {
+                'title': categorie['name'],
+                'submenu': [{'title': subcategorie['name']} for subcategorie in subcategorie_data]
+            }
+
+            # Ajouter l'élément de menu à la liste
+            menuItems.append(menuItem)
+
+        return Response(menuItems)
+
+
 
 class CourseorganizationListAPIView(APIView):
     def get(self, request):
@@ -60,7 +84,7 @@ class InstructororganizationListAPIView(APIView):
         return Response(serializer.data)
 
 
-class Details(APIView):
+class Details_Categories(APIView):
     def get(self, request, category_id):
         try:
             # Récupérer la catégorie correspondant à l'ID fourni
@@ -72,12 +96,12 @@ class Details(APIView):
         subcategories = Subcategorie.objects.filter(categorie=category)
         subcategories_data = SubcategorieSerializer(subcategories, many=True).data
         
-        # Récupérer les IDs des sous-catégories
-        subcategories_ids = subcategories.values_list('id', flat=True)
+        # # Récupérer les IDs des sous-catégories
+        # subcategories_ids = subcategories.values_list('id', flat=True)
         
-        # Récupérer les cours correspondants à la catégorie
-        courses = Course.objects.filter(sub_categorie__in=subcategories_ids)
-        courses_data = CourseSerializer(courses, many=True).data
+        # # Récupérer les cours correspondants à la catégorie
+        # courses = Course.objects.filter(sub_categorie__in=subcategories_ids)
+        # courses_data = CourseSerializer(courses, many=True).data
         
         # # Récupérer les instructeurs correspondants aux cours de la catégorie
         # instructors = Instructor.objects.filter(courses__sub_categorie__categorie=category)
@@ -96,9 +120,6 @@ class Details(APIView):
                 "link": category.link,
             },
             "subcategories": subcategories_data,
-            "courses": courses_data,
-            # "instructors": instructors_data,
-            # "organizations": organizations_data,
         })
     
 
