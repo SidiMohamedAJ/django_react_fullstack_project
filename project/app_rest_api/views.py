@@ -71,6 +71,41 @@ class SubcategorieListAPIView(APIView):
             menuItems.append(menuItem)
 
         return Response(menuItems)
+    
+class Details_CourseAPIView(APIView):
+    def get(self, request, course_id):
+        try:
+            # Retrieve the course based on the provided ID
+            course = Course.objects.get(id=course_id)
+        except Course.DoesNotExist:
+            return Response({"message": "The specified course does not exist"}, status=404)
+        
+        # Serialize the course data
+        course_serializer = CourseSerializer(course)
+        course_data = course_serializer.data
+        
+        # Retrieve instructors for the course
+        course_instructors = Courseinstructor.objects.filter(course=course)
+        instructor_ids = [ci.instructor_id for ci in course_instructors]
+        instructors = Instructor.objects.filter(id__in=instructor_ids)
+        instructor_serializer = InstructorSerializer(instructors, many=True)
+        instructor_data = instructor_serializer.data
+        
+        # Retrieve organizations for the course
+        course_organizations = Courseorganization.objects.filter(course=course)
+        organization_ids = [co.organization_id for co in course_organizations]
+        organizations = Organization.objects.filter(id__in=organization_ids)
+        organization_serializer = OrganizationSerializer(organizations, many=True)
+        organization_data = organization_serializer.data
+        
+        # Construct the response data
+        response_data = {
+            "course": course_data,
+            "instructors": instructor_data,
+            "organizations": organization_data
+        }
+        
+        return Response(response_data)
 
 
 

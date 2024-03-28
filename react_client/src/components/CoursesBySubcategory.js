@@ -25,7 +25,7 @@ const CoursesBySubcategory = () => {
         <div className="cards-container">
             {courses.map((course, index) => (
                 <div key={index} className="course-card">
-                    <Link to={`details_course/${course.id}`} className="card-link">
+                    <Link to={`/detail_courses/${course.id}`} className="card-link">
                         <Card className="m-3 rounded shadow-lg" style={{ width: '22em' }}>
                             <Card.Body>
                                 <Card.Title>{course.title}</Card.Title>

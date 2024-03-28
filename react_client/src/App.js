@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import NavbarMenu from './components/Navbar';
 import CoursesBySubcategory from './components/CoursesBySubcategory';
 import TopRatedCourses from './components/TopRatedCourses';
+import CourseDetails from './components/CourseDetails'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<TopRatedCourses />} />
             <Route path="/coursesby_subcategory/:id/" element={<CoursesBySubcategory />} />
+            <Route path="/detail_courses/:id/" element={<CourseDetails />} />
           </Routes>
         </Router>
       </div>

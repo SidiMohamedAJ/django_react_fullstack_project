@@ -1,9 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
 import Dropdown from "./Dropdown";
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const MenuItems = ({ items, depthLevel }) => {
   const [dropdown, setDropdown] = useState(false);
+  const [courses, setCourses] = useState([]);
   const ref = useRef(null);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/coursesby_subcategory/${items.id}`);
+        setCourses(response.data);
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+      }
+    };
+
+    fetchCourses();
+  }, [items.id]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -53,8 +69,18 @@ const MenuItems = ({ items, depthLevel }) => {
           <Dropdown depthLevel={depthLevel} submenus={items.submenu} dropdown={dropdown} />
         </>
       ) : (
-        <a href="/#">{items.title}</a>
+        <Link to={`coursesby_subcategory/${items.id}`} className="submenu-link">
+          {items.title}
+        </Link>
       )}
+      <div className="courses-container">
+        {courses.map(course => (
+          <div key={course.id} className="course">
+            <h3>{course.title}</h3>
+            {/* Affichez d'autres détails du cours ici */}
+          </div>
+        ))}
+      </div>
     </li>
   );
 };

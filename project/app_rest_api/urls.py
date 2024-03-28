@@ -4,7 +4,7 @@ from .views import (
     InstructorListAPIView, OrganizationListAPIView,
     SubcategorieListAPIView, CourseorganizationListAPIView,
     CourseinstructorListAPIView, InstructororganizationListAPIView, SearchAPIView, Details_Categories,
-    CourseListBySubCategAPIView, TopRatedCoursesAPIView
+    CourseListBySubCategAPIView, TopRatedCoursesAPIView, Details_CourseAPIView
 )
 
 urlpatterns = [
@@ -22,5 +22,7 @@ urlpatterns = [
     path('coursesby_subcategory/<str:subcategory_id>/', CourseListBySubCategAPIView.as_view(), name='courses_by_subcategory'),
 
     path('top_rated_courses/', TopRatedCoursesAPIView.as_view()),
+
+    path('detail_courses/<str:course_id>/', Details_CourseAPIView.as_view()),
     
 ]
