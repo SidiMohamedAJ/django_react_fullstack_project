@@ -23,6 +23,15 @@ class CourseListAPIView(APIView):
         serializer = CourseSerializer(courses, many=True)
         return Response(serializer.data)
 
+#Un sérialiseur qui filtre les cours par l'identifiant de la sous-catégorie
+class CourseListBySubCategAPIView(APIView):
+    def get(self, request, subcategory_id):
+        # Filtrer les cours par l'identifiant de la sous-catégorie
+        courses = Course.objects.filter(sub_categorie=subcategory_id)
+        # Sérialiser les cours filtrés
+        serializer = CourseSerializer(courses, many=True)
+        return Response(serializer.data)
+
 class InstructorListAPIView(APIView):
     def get(self, request):
         instructors = Instructor.objects.all()
