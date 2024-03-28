@@ -64,7 +64,7 @@ class SubcategorieListAPIView(APIView):
             # Créer un élément de menu pour cette catégorie
             menuItem = {
                 'title': categorie['name'],
-                'submenu': [{'title': subcategorie['name']} for subcategorie in subcategorie_data]
+                'submenu': [{'title': subcategorie['name'], 'id': subcategorie['id']} for subcategorie in subcategorie_data]
             }
 
             # Ajouter l'élément de menu à la liste
@@ -186,3 +186,12 @@ class SearchAPIView(APIView):
             'course_organizations': course_organization_data,
             'instructor_organizations': instructor_organization_data
         })
+
+
+class TopRatedCoursesAPIView(APIView):
+    def get(self, request):
+        # Récupérer les 20 premiers cours triés par rating en ordre décroissant
+        courses = Course.objects.order_by('rating')[:20]
+        # Sérialiser les cours
+        serializer = CourseSerializer(courses, many=True)
+        return Response(serializer.data)

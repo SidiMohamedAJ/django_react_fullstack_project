@@ -2,7 +2,8 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import NavbarMenu from './components/Navbar';
-import ShowCategories from './components/showCategories';
+import CoursesBySubcategory from './components/CoursesBySubcategory';
+import TopRatedCourses from './components/TopRatedCourses';
 
 function App() {
   return (
@@ -11,7 +12,8 @@ function App() {
         <Router>
           <NavbarMenu />
           <Routes>
-            <Route path="/" element={<ShowCategories />} />
+            <Route path="/" element={<TopRatedCourses />} />
+            <Route path="/coursesby_subcategory/:id/" element={<CoursesBySubcategory />} />
           </Routes>
         </Router>
       </div>
