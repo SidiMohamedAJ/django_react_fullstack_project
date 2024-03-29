@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { Card, Row, Col } from 'react-bootstrap';
 
 function CourseDetails() {
     const [courseData, setCourseData] = useState({});
@@ -39,32 +40,39 @@ function CourseDetails() {
     }, [id]);
 
     return (
-        <div>
+        <div style={{ paddingTop: '60px' }}>
             {error && <p>{error}</p>}
             <h1>{courseData.title}</h1>
             <p>{courseData.description || 'No description available'}</p> {/* Null check for description */}
             <h2>Instructors</h2>
-            {instructors.map(instructor => (
-                <div key={instructor.id}>
-                    <h3>{instructor.name}</h3>
-                    <img src={instructor.image_url} alt={instructor.name} 
-                        style={{ width: '100px', height: '100px' }}/>
-                    <p>{instructor.description || 'No description available'}</p> {/* Null check for description */}
-                </div>
-            ))}
+            <Row>
+                {instructors.map(instructor => (
+                    <Col key={instructor.id} xs={6} md={6} lg={4} style={{ marginBottom: '20px' }}>
+                        <Card style={{ width: '100%' }}>
+                            <Card.Img variant="top" src={instructor.image_url} style={{ maxHeight: '150px', objectFit: 'cover' }} />
+                            <Card.Body>
+                                <Card.Title>{instructor.name}</Card.Title>
+                                <Card.Text style={{ fontSize: '14px' }}>{instructor.description || 'No description available'}</Card.Text> {/* Null check for description */}
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                ))}
+            </Row>
             <h2>Organizations</h2>
-            {organizations.map(organization => (
-                <div key={organization.id}>
-                    <h3>{organization.name}</h3>
-                    <img 
-                        src={organization.img_url} 
-                        alt={organization.name} 
-                        style={{ width: '100px', height: '100px' }} 
-                    />
-                    <p>{organization.description || 'No description available'}</p> {/* Null check for description */}
-                    <a href={organization.contact_url}>Contact</a>
-                </div>
-            ))}
+            <Row>
+                {organizations.map(organization => (
+                    <Col key={organization.id} xs={6} md={6} lg={4} style={{ marginBottom: '20px' }}>
+                        <Card style={{ width: '100%' }}>
+                            <Card.Img variant="top" src={organization.img_url} style={{ maxHeight: '150px', objectFit: 'cover' }} />
+                            <Card.Body>
+                                <Card.Title>{organization.name}</Card.Title>
+                                <Card.Text style={{ fontSize: '14px' }}>{organization.description || 'No description available'}</Card.Text> {/* Null check for description */}
+                                <Card.Link href={organization.contact_url}>Contact</Card.Link>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                ))}
+            </Row>
         </div>
     );
 }

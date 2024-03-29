@@ -36,7 +36,7 @@ const CoursesBySubcategory = () => {
     }, [id]);
 
     return (
-        <div>
+        <div style={{ paddingTop: '60px' }}>
             {error && <p>{error}</p>}
             <div className="cards-container">
                 {courses.map((course, index) => (

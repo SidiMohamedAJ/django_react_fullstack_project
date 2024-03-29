@@ -44,7 +44,7 @@ const TopRatedCourses = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div>
+    <div style={{ paddingTop: '60px' }}>
       <h2>Top Rated Courses</h2>
       {error && <p>{error}</p>} {/* Afficher un message d'erreur en cas d'échec de la requête */}
       <div className="cards-container">
