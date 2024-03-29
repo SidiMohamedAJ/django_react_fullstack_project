@@ -7,25 +7,40 @@ function CourseDetails() {
     const [instructors, setInstructors] = useState([]);
     const [organizations, setOrganizations] = useState([]);
     const { id } = useParams();
+    const [error, setError] = useState(null);
 
     useEffect(() => {
+        const abortController = new AbortController();
+        const signal = abortController.signal;
+
         async function fetchData() {
             try {
-                const response = await axios.get(`http://localhost:8000/detail_courses/${id}/`);
-                const { course, instructors, organizations } = response.data; // Destructure data from response
-                setCourseData(course);
-                setInstructors(instructors);
-                setOrganizations(organizations);
+                const response = await axios.get(`http://localhost:8000/detail_courses/${id}/`, { signal });
+                if (!signal.aborted) {
+                  const { course, instructors, organizations } = response.data; // Destructure data from response
+                  setCourseData(course);
+                  setInstructors(instructors);
+                  setOrganizations(organizations);
+                  setError(null);
+                }
             } catch (error) {
-                console.error('Error fetching data:', error);
+                if (!signal.aborted) {
+                  console.error('Error fetching data:', error);
+                  setError('Error fetching data. Please try again later.');
+                }
             }
         }
 
         fetchData();
+
+        return () => {
+            abortController.abort();
+        };
     }, [id]);
 
     return (
         <div>
+            {error && <p>{error}</p>}
             <h1>{courseData.title}</h1>
             <p>{courseData.description || 'No description available'}</p> {/* Null check for description */}
             <h2>Instructors</h2>

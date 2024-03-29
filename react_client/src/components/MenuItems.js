@@ -1,24 +1,38 @@
+import axios from 'axios';
 import React, { useState, useEffect, useRef } from "react";
 import Dropdown from "./Dropdown";
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 
 const MenuItems = ({ items, depthLevel }) => {
   const [dropdown, setDropdown] = useState(false);
   const [courses, setCourses] = useState([]);
   const ref = useRef(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/coursesby_subcategory/${items.id}`);
-        setCourses(response.data);
+        const response = await axios.get(`http://localhost:8000/coursesby_subcategory/${items.id}`, { signal });
+        if (!signal.aborted) {
+          setCourses(response.data);
+          setError(null);
+        }
       } catch (error) {
-        console.error('Error fetching courses:', error);
+        if (!signal.aborted) {
+          console.error('Error fetching courses:', error);
+          setError('Error fetching courses. Please try again later.');
+        }
       }
     };
 
     fetchCourses();
+
+    return () => {
+      abortController.abort(); // Annuler la requête en cours lorsque le composant est démonté
+    };
   }, [items.id]);
 
   useEffect(() => {
@@ -74,9 +88,10 @@ const MenuItems = ({ items, depthLevel }) => {
         </Link>
       )}
       <div className="courses-container">
+        {error && <p>{error}</p>}
         {courses.map(course => (
           <div key={course.id} className="course">
-            <h3>{course.title}</h3>
+            
             {/* Affichez d'autres détails du cours ici */}
           </div>
         ))}

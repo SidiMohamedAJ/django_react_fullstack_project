@@ -1,24 +1,38 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { Card, Button } from 'react-bootstrap';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const TopRatedCourses = () => {
   const [courses, setCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [coursesPerPage] = useState(6); // Display 6 cards per page
+  const [coursesPerPage] = useState(20); // Display 6 cards per page
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+
     const fetchCourses = async () => {
       try {
-        const result = await axios.get(`http://localhost:8000/top_rated_courses/`);
-        setCourses(result.data);
+        const result = await axios.get(`http://localhost:8000/top_rated_courses/`, { signal });
+        if (!signal.aborted) {
+          setCourses(result.data);
+          setError(null); // Réinitialiser les erreurs si la requête réussit
+        }
       } catch (error) {
-        console.error('Error fetching courses:', error);
+        if (!signal.aborted) {
+          console.error('Error fetching courses:', error);
+          setError('Error fetching courses. Please try again later.');
+        }
       }
     };
 
     fetchCourses();
+
+    return () => {
+      abortController.abort(); // Annuler la requête en cours lorsque le composant est démonté
+    };
   }, []);
 
   // Get current courses
@@ -32,6 +46,7 @@ const TopRatedCourses = () => {
   return (
     <div>
       <h2>Top Rated Courses</h2>
+      {error && <p>{error}</p>} {/* Afficher un message d'erreur en cas d'échec de la requête */}
       <div className="cards-container">
         {currentCourses.map((course, index) => (
           <Link key={index} to={`/detail_courses/${course.id}`} className="card-link">
