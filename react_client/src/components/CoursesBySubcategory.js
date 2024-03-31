@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { Card } from 'react-bootstrap';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
+
 
 const CoursesBySubcategory = () => {
     const [courses, setCourses] = useState([]);
@@ -23,7 +23,7 @@ const CoursesBySubcategory = () => {
             } catch (error) {
                 if (!signal.aborted) {
                     console.error('Error fetching courses:', error);
-                    setError('Error fetching courses. Please try again later.');
+                    setError('Error fetching courses');
                 }
             }
         };
@@ -37,24 +37,29 @@ const CoursesBySubcategory = () => {
 
     return (
         <div style={{ paddingTop: '60px' }}>
-            {error && <p>{error}</p>}
-            <div className="cards-container">
-                {courses.map((course, index) => (
-                    <div key={index} className="course-card">
-                        <Link to={`/detail_courses/${course.id}`} className="card-link">
-                            <Card className="m-3 rounded shadow-lg" style={{ width: '22em' }}>
-                                <Card.Body>
-                                    <Card.Title>{course.title}</Card.Title>
-                                    <Card.Text>{course.description}</Card.Text>
-                                    <Card.Text>Rating: {course.rating}</Card.Text>
-                                    <Card.Text>Duration: {course.duration}</Card.Text>
-                                    <Card.Text>Price: {course.price}</Card.Text>
-                                    <Card.Text>Type: {course.type}</Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Link>
-                    </div>
-                ))}
+            <div className="container-fluid bg-transparent my-4 p-3">
+                <div className="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-4 g-3">
+                    {courses.map((course, index) => (
+                        <div key={index} className="col">
+                            <div className="card h-80 shadow-sm">
+                                {/* <img src="https://www.freepnglogos.com/uploads/notebook-png/download-laptop-notebook-png-image-png-image-pngimg-2.png" className="card-img-top" alt="Course Image" /> */}
+                                <div className="card-body">
+                                    <div className="clearfix mb-3">
+                                        <h5 className="card-title">{course.title}</h5>
+                                        <span class="float-start badge rounded-pill bg-primary">{course.rating}</span> 
+                                        <span className="float-end price-hp">{course.price}</span>
+                                    </div>
+                                    <h5 className="card-title">{course.description}</h5>
+                                    <h5 className="card-title">Duration: {course.duration}</h5>
+                                    <h5 className="card-title">Type : {course.type}</h5>
+                                    <div className="text-center my-4">
+                                        <Link to={`/detail_courses/${course.id}`} class="btn btn-warning">Details</Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );

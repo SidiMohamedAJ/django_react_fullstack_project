@@ -1,12 +1,13 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { FaStar } from 'react-icons/fa'; 
+import { Button } from 'react-bootstrap';
 
 const TopRatedCourses = () => {
   const [courses, setCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [coursesPerPage] = useState(20); // Display 6 cards per page
+  const [coursesPerPage] = useState(20); // Afficher 20 cours par page
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -23,7 +24,6 @@ const TopRatedCourses = () => {
       } catch (error) {
         if (!signal.aborted) {
           console.error('Error fetching courses:', error);
-          setError('Error fetching courses. Please try again later.');
         }
       }
     };
@@ -35,35 +35,59 @@ const TopRatedCourses = () => {
     };
   }, []);
 
-  // Get current courses
+  // Fonction pour générer les étoiles de notation visuelle
+  const renderRatingStars = (rating) => {
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      if (i < rating) {
+        stars.push(<FaStar key={i} color="#ffc107" />);
+      } else {
+        stars.push(<FaStar key={i} color="#e4e5e9" />);
+      }
+    }
+    return stars;
+  };
+
+  // Fonction pour paginer les cours
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Calculer l'index de début et de fin des cours à afficher sur la page actuelle
   const indexOfLastCourse = currentPage * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
   const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
 
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
   return (
     <div style={{ paddingTop: '60px' }}>
       <h2>Top Rated Courses</h2>
-      {error && <p>{error}</p>} {/* Afficher un message d'erreur en cas d'échec de la requête */}
-      <div className="cards-container">
-        {currentCourses.map((course, index) => (
-          <Link key={index} to={`/detail_courses/${course.id}`} className="card-link">
-            <Card className="m-3 rounded shadow-lg" style={{ width: '22em' }}>
-              <Card.Body>
-                <Card.Title>{course.title}</Card.Title>
-                <Card.Text>{course.description}</Card.Text>
-                <Card.Text>Rating: {course.rating}</Card.Text>
-                <Card.Text>Duration: {course.duration}</Card.Text>
-                <Card.Text>Price: {course.price}</Card.Text>
-                <Card.Text>Type: {course.type}</Card.Text>
-              </Card.Body>
-            </Card>
-          </Link>
-        ))}
+      <div className="container-fluid bg-transparent my-4 p-3">
+        <div className="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-4 g-3">
+          {currentCourses.map((course, index) => (
+            <div key={index} className="col">
+              <div className="card h-100 shadow-sm">
+                <div className="card-body">
+                  <div className="clearfix mb-3">
+                    <h5 className="card-title">{course.title}</h5>
+                    <div className="float-start">
+                      {renderRatingStars(course.rating)}
+                    </div>
+                    <span className="float-end price-hp">Price: {course.price}</span>
+                  </div>
+                  <h5 className="card-title">{course.description}</h5>
+                  <h5 className="card-title">Duration: {course.duration}</h5>
+                  <h5 className="card-title">Type : {course.type}</h5>
+                  <div className="d-grid gap-2 my-4">
+                    <Link to={`/detail_courses/${course.id}`} className="btn btn-warning">
+                      <h2>Details</h2>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
       <div>
+        {/* Pagination */}
         {courses.length > coursesPerPage && (
           <ul className="pagination">
             {Array.from({ length: Math.ceil(courses.length / coursesPerPage) }, (_, i) => (

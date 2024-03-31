@@ -88,7 +88,6 @@ const MenuItems = ({ items, depthLevel }) => {
         </Link>
       )}
       <div className="courses-container">
-        {error && <p>{error}</p>}
         {courses.map(course => (
           <div key={course.id} className="course">
             

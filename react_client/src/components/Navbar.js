@@ -2,11 +2,15 @@ import React, { useState, useEffect } from "react";
 import MenuItems from "./MenuItems";
 import { fetchMenuItems } from "../menuItems";
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+
 
 const Navbar = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [isCursorOnCategories, setIsCursorOnCategories] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
+  
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -49,8 +53,7 @@ const Navbar = () => {
     event.preventDefault();
     try {
       const response = await axios.get(`http://localhost:8000/search/?q=${searchQuery}`);
-      console.log("Résultats de la recherche :", response.data);
-      // Ajoutez le code pour traiter les résultats de la recherche ici
+      navigate('/SearchQuery', { state: { searchResults: response.data } });
     } catch (error) {
       console.error("Erreur lors de la recherche :", error);
     }

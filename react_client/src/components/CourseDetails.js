@@ -27,7 +27,6 @@ function CourseDetails() {
             } catch (error) {
                 if (!signal.aborted) {
                   console.error('Error fetching data:', error);
-                  setError('Error fetching data. Please try again later.');
                 }
             }
         }
@@ -41,33 +40,37 @@ function CourseDetails() {
 
     return (
         <div style={{ paddingTop: '60px' }}>
-            {error && <p>{error}</p>}
             <h1>{courseData.title}</h1>
-            <p>{courseData.description || 'No description available'}</p> {/* Null check for description */}
-            <h2>Instructors</h2>
+            {/* <p>{courseData.description || 'No description available'}</p> Null check for description */}
+            <h2 style={{ paddingTop: '40px' }}>Instructors</h2>
             <Row>
                 {instructors.map(instructor => (
                     <Col key={instructor.id} xs={6} md={6} lg={4} style={{ marginBottom: '20px' }}>
                         <Card style={{ width: '100%' }}>
-                            <Card.Img variant="top" src={instructor.image_url} style={{ maxHeight: '150px', objectFit: 'cover' }} />
+                            <Card.Img  variant="top" src={instructor.image_url} className="card-img-top rounded-circle mx-auto d-block"  style={{ maxHeight: '250px', width: '250px', objectFit: 'cover' }}  />
                             <Card.Body>
-                                <Card.Title>{instructor.name}</Card.Title>
-                                <Card.Text style={{ fontSize: '14px' }}>{instructor.description || 'No description available'}</Card.Text> {/* Null check for description */}
+                                <div className="clearfix mb-3">
+                                    <span className="float-start badge rounded-pill bg-primary">{instructor.name}</span>
+                                </div>
+                                <h5 className="card-title">{instructor.description || 'No description available'}</h5>
+                                
                             </Card.Body>
                         </Card>
                     </Col>
                 ))}
             </Row>
-            <h2>Organizations</h2>
+            <h2 style={{ paddingTop: '40px' }}>Organizations</h2>
             <Row>
                 {organizations.map(organization => (
                     <Col key={organization.id} xs={6} md={6} lg={4} style={{ marginBottom: '20px' }}>
-                        <Card style={{ width: '100%' }}>
-                            <Card.Img variant="top" src={organization.img_url} style={{ maxHeight: '150px', objectFit: 'cover' }} />
+                          <Card style={{ width: '100%' }}>
+                            <Card.Img  variant="top" src={organization.img_url} className="card-img-top mx-auto d-block"  style={{ maxHeight: '250px', width: '250px', objectFit: 'cover' }}  />
                             <Card.Body>
-                                <Card.Title>{organization.name}</Card.Title>
-                                <Card.Text style={{ fontSize: '14px' }}>{organization.description || 'No description available'}</Card.Text> {/* Null check for description */}
-                                <Card.Link href={organization.contact_url}>Contact</Card.Link>
+                                <div className="clearfix mb-3">
+                                    <span className="float-start badge rounded-pill bg-primary">{organization.name}</span>
+                                </div>
+                                <h5 className="card-title">{organization.description || 'No description available'}</h5>
+                                
                             </Card.Body>
                         </Card>
                     </Col>

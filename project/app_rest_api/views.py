@@ -212,14 +212,14 @@ class SearchAPIView(APIView):
 
         # Retourner les résultats de la recherche sous forme de réponse JSON
         return Response({
-            'categories': category_data,
+            # 'categories': category_data,
             'courses': course_data,
-            'instructors': instructor_data,
-            'organizations': organization_data,
-            'subcategories': subcategory_data,
-            'course_instructors': course_instructor_data,
-            'course_organizations': course_organization_data,
-            'instructor_organizations': instructor_organization_data
+            # 'instructors': instructor_data,
+            # 'organizations': organization_data,
+            # 'subcategories': subcategory_data,
+            # 'course_instructors': course_instructor_data,
+            # 'course_organizations': course_organization_data,
+            # 'instructor_organizations': instructor_organization_data
         })
 
 
